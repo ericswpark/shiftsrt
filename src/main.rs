@@ -20,7 +20,7 @@ fn handle_args(args: Vec<String>) -> (String, i32) {
 
     // Check if first argument is a valid path and a valid .srt file
     let path = args[1];
-    if !Path::new(path).exists() {
+    if !Path::new(&path).exists() {
         panic!("The first argument must be a valid path. The specified path does not exist.");
     }
     if path.len() < 4 || !path.ends_with(".srt") {
