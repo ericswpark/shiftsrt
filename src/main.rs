@@ -14,7 +14,7 @@ fn handle_args(args: Vec<String>) -> (String, i32) {
     const ARG_COUNT: usize = 3;
     if args.len() < ARG_COUNT {
         panic!("Not enough arguments");
-    } else if args.len > ARG_COUNT {
+    } else if args.len() > ARG_COUNT {
         panic!("Too many arguments");
     }
 
