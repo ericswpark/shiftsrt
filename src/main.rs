@@ -1,5 +1,9 @@
 use std::env;
 use std::path::Path;
+use std::fs::File;
+use std::io::{self, prelude::*, BufReader};
+
+const TIME_LINE_FORMAT_REGEX: String = "\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\n";
 
 fn main() {
     // Gather command-line arguments
@@ -7,6 +11,16 @@ fn main() {
     let (path, offset) = handle_args(args);
 
     println!("Shifting file {} with offset {}.", path, offset);
+
+    // Get source file to read
+    let source_file = File::open(path).expect("Failed to open source file.");
+    let source_file_reader = BufReader::new(source_file);
+
+    let mut is_time_line = false;
+
+    for line in source_file_reader.lines() {
+        // TODO Implement the rest of the logic here
+    }
 }
 
 fn handle_args(args: Vec<String>) -> (String, i32) {
