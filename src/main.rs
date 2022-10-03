@@ -22,7 +22,7 @@ fn main() {
     }
 }
 
-fn handle_args(args: Vec<String>) -> (&String, i32) {
+fn handle_args(args: Vec<String>) -> (String, i32) {
     // Check if argument count is correct
     const ARG_COUNT: usize = 3;
     if args.len() < ARG_COUNT {
@@ -46,5 +46,5 @@ fn handle_args(args: Vec<String>) -> (&String, i32) {
         .parse()
         .expect("Not a valid integer. Input the time offset in milliseconds.");
 
-    (path, offset)
+    (path.clone(), offset)
 }
