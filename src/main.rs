@@ -5,6 +5,8 @@ fn main() {
     // Gather command-line arguments
     let args: Vec<String> = env::args().collect();
     let parsed_args = handle_args(args);
+
+    println!("Shifting file {} with offset {}.", parsed_args.0, parsed_args.1);
 }
 
 fn handle_args(args: Vec<String>) -> (String, i32) {
