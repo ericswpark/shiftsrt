@@ -7,8 +7,7 @@ const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\
 
 fn main() {
     // Gather command-line arguments
-    let args: Vec<String> = env::args().collect();
-    let (path, offset) = handle_args(args);
+    let (path, offset) = handle_args(env::args().collect());
 
     println!("Shifting file {} with offset {}.", path, offset);
 
