@@ -4,9 +4,9 @@ use std::path::Path;
 fn main() {
     // Gather command-line arguments
     let args: Vec<String> = env::args().collect();
-    let parsed_args = handle_args(args);
+    let (path, offset) = handle_args(args);
 
-    println!("Shifting file {} with offset {}.", parsed_args.0, parsed_args.1);
+    println!("Shifting file {} with offset {}.", path, offset);
 }
 
 fn handle_args(args: Vec<String>) -> (String, i32) {
