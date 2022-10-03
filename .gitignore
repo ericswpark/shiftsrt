@@ -1,1 +1,4 @@
 /target
+
+# Ignore all .srt subtitle files
+*.srt
