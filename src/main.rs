@@ -3,7 +3,7 @@ use std::path::Path;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 
-const TIME_LINE_FORMAT_REGEX: String = "\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\n";
+const TIME_LINE_FORMAT_REGEX: String = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\n";
 
 fn main() {
     // Gather command-line arguments
