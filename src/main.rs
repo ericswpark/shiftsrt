@@ -1,7 +1,6 @@
 use std::env;
-use std::path::Path;
 use std::fs::File;
-use std::io::{self, prelude::*, BufReader};
+use std::io::{prelude::*, BufReader};
 use regex::Regex;
 use std::process;
 
