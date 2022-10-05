@@ -55,6 +55,15 @@ fn handle_args(args: Vec<String>) -> (String, String, i32) {
         panic!("The file is not a valid .srt file. Hint: make sure the file extension is correct.");
     }
 
+    // Check if target file already exists
+    let target_path = source_path
+        .get(..source_path.len()-4)
+        .unwrap()
+        .to_owned() + "-shift.srt";
+    if Path::new(&target_path).exists() {
+        panic!("The target file exists. To prevent accidentally overwriting the file, shiftsrt will now stop.");
+    }
+
     // Check if second argument is time offset in milliseconds
     let offset: i32 = args[2]
         .trim()
