@@ -62,7 +62,7 @@ impl TimeCode {
     }
 
     pub fn format_string(&self) -> String {
-        format!("{}:{}:{},{}",
+        format!("{:02}:{:02}:{:02},{:03}",
             self.hour,
             self.minute,
             self.second,
