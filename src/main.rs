@@ -8,8 +8,8 @@ use shiftsrt::*;
 const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}";
 
 fn main() {
-    // Gather command-line arguments
-    let runtime_arguments = RuntimeArguments::build(env::args().collect());
+    let args: Vec<String> = env::args().collect();
+    let runtime_arguments = RuntimeArguments::build(&args);
 
     println!("Shifting file {} with offset {}.", source_path, offset);
 
