@@ -10,21 +10,21 @@ pub struct RuntimeArguments {
 const ARG_COUNT: usize = 3;
 
 impl RuntimeArguments {
-    pub fn build(args: &[String]) -> RuntimeArguments {
+    pub fn build(args: &[String]) -> Result<RuntimeArguments, &'static str> {
         // Check if argument count is correct
         if args.len() < ARG_COUNT {
-            panic!("Not enough arguments");
+            return Err("Not enough arguments");
         } else if args.len() > ARG_COUNT {
-            panic!("Too many arguments");
+            return Err("Too many arguments");
         }
 
         // Check if first argument is a valid path and a valid .srt file
         let source_file_path = &args[1];
         if !Path::new(&source_file_path).exists() {
-            panic!("The first argument must be a valid path. The specified path does not exist.");
+            return Err("The first argument must be a valid path. The specified path does not exist.");
         }
         if source_file_path.len() < 4 || !source_file_path.ends_with(".srt") {
-            panic!("The file is not a valid .srt file. Hint: make sure the file extension is correct.");
+            return Err("The file is not a valid .srt file. Hint: make sure the file extension is correct.");
         }
 
         // Check if target file already exists
@@ -33,7 +33,7 @@ impl RuntimeArguments {
             .unwrap()
             .to_owned() + "-shift.srt";
         if Path::new(&target_file_path).exists() {
-            panic!("The target file exists. To prevent accidentally overwriting the file, shiftsrt will now stop.");
+            return Err("The target file exists. To prevent accidentally overwriting the file, shiftsrt will now stop.");
         }
 
         // Check if second argument is time offset in milliseconds
@@ -42,11 +42,11 @@ impl RuntimeArguments {
             .parse()
             .expect("Not a valid integer. Input the time offset in milliseconds.");
 
-        RuntimeArguments {
+        Ok(RuntimeArguments {
             source_file_path: source_file_path.clone(),
             target_file_path,
             offset
-        }
+        })
     }
 }
 
