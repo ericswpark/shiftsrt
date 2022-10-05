@@ -2,6 +2,7 @@ use std::env;
 use std::path::Path;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
+use regex::Regex;
 
 const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\n";
 
@@ -16,6 +17,7 @@ fn main() {
     let source_file_reader = BufReader::new(source_file);
 
     let mut is_time_line = false;
+    let regex_matcher = Regex::new(TIME_LINE_FORMAT_REGEX).unwrap();
 
     for line in source_file_reader.lines() {
         // TODO Implement the rest of the logic here
