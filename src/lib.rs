@@ -10,7 +10,7 @@ pub struct RuntimeArguments {
 const ARG_COUNT: usize = 3;
 
 impl RuntimeArguments {
-    fn build(args: &[String]) -> RuntimeArguments {
+    pub fn build(args: &[String]) -> RuntimeArguments {
         // Check if argument count is correct
         if args.len() < ARG_COUNT {
             panic!("Not enough arguments");
