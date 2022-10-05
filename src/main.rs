@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{prelude::*, BufReader};
 use std::process;
 
-use shiftsrt::*;
+use shiftsrt::{RuntimeArguments, shift};
 
 enum LineType {
     COUNT,
