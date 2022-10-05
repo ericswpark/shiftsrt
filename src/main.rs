@@ -9,6 +9,12 @@ use shiftsrt::*;
 
 const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}";
 
+enum LineType {
+    COUNT,
+    TIMECODE,
+    CONTENT
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let runtime_arguments = RuntimeArguments::build(&args).unwrap_or_else(|err| {
@@ -28,22 +34,32 @@ fn main() {
     let mut target_file = File::create(runtime_arguments.target_file_path)
         .expect("Failed to open target file.");
 
-    let mut is_time_line = false;
+    let mut next_line = LineType::COUNT;
     let regex_matcher = Regex::new(TIME_LINE_FORMAT_REGEX).unwrap();
 
     for line in source_file_reader.lines() {
         let line = line.unwrap();
-        if !regex_matcher.is_match(&line) {
-            // Not a time line, write directly to file
-            writeln!(&mut target_file, "{}", line).unwrap();
-        } else {
-            let times: Vec<&str> = line.split(" --> ").collect();
-            let start_time = times[0];
-            let end_time = times[1];
+        match next_line {
+            LineType::COUNT => {
+                next_line = LineType::TIMECODE;
+                writeln!(&mut target_file, "{}", line).unwrap();
+            },
+            LineType::TIMECODE => {
+                next_line = LineType::CONTENT;
+                let times: Vec<&str> = line.split(" --> ").collect();
+                let start_time = times[0];
+                let end_time = times[1];
 
-            let start_time = shift(start_time.to_string(), runtime_arguments.offset);
-            let end_time = shift(end_time.to_string(), runtime_arguments.offset);
-            writeln!(&mut target_file, "{} --> {}", start_time, end_time).unwrap();
+                let start_time = shift(start_time.to_string(), runtime_arguments.offset);
+                let end_time = shift(end_time.to_string(), runtime_arguments.offset);
+                writeln!(&mut target_file, "{} --> {}", start_time, end_time).unwrap();
+            },
+            LineType::CONTENT => {
+                if line == "\n" {
+                    next_line = LineType::COUNT;
+                }
+                writeln!(&mut target_file, "{}", line).unwrap();
+            }
         }
     }
 }
