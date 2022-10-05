@@ -1,4 +1,54 @@
+use std::error::Error;
+use std::path::Path;
 
+pub struct RuntimeArguments {
+    pub source_file_path: String,
+    pub target_file_path: String,
+    pub offset: i32,
+}
+
+const ARG_COUNT: usize = 3;
+
+impl RuntimeArguments {
+    fn new(args: &[String]) -> RuntimeArguments {
+        // Check if argument count is correct
+        if args.len() < ARG_COUNT {
+            panic!("Not enough arguments");
+        } else if args.len() > ARG_COUNT {
+            panic!("Too many arguments");
+        }
+
+        // Check if first argument is a valid path and a valid .srt file
+        let source_file_path = &args[1];
+        if !Path::new(&source_file_path).exists() {
+            panic!("The first argument must be a valid path. The specified path does not exist.");
+        }
+        if source_file_path.len() < 4 || !source_file_path.ends_with(".srt") {
+            panic!("The file is not a valid .srt file. Hint: make sure the file extension is correct.");
+        }
+
+        // Check if target file already exists
+        let target_file_path = source_file_path
+            .get(..source_file_path.len()-4)
+            .unwrap()
+            .to_owned() + "-shift.srt";
+        if Path::new(&target_file_path).exists() {
+            panic!("The target file exists. To prevent accidentally overwriting the file, shiftsrt will now stop.");
+        }
+
+        // Check if second argument is time offset in milliseconds
+        let offset: i32 = args[2]
+            .trim()
+            .parse()
+            .expect("Not a valid integer. Input the time offset in milliseconds.");
+
+        RuntimeArguments {
+            source_file_path: source_file_path.clone(),
+            target_file_path,
+            offset
+        }
+    }
+}
 
 pub fn shift(time: String, offset: i32) -> String {
     let parts: Vec<&str> = time.split(",").collect();
