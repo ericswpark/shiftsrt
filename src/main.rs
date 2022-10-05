@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{prelude::*, BufReader};
 use std::process;
 
-use shiftsrt::{RuntimeArguments, shift};
+use shiftsrt::{RuntimeArguments, TimeCode};
 
 enum LineType {
     COUNT,
@@ -42,12 +42,13 @@ fn main() {
             LineType::TIMECODE => {
                 next_line = LineType::CONTENT;
                 let times: Vec<&str> = line.split(" --> ").collect();
-                let start_time = times[0];
-                let end_time = times[1];
+                let mut start_time = TimeCode::parse(times[0]);
+                let mut end_time = TimeCode::parse(times[1]);
 
-                let start_time = shift(start_time.to_string(), runtime_arguments.offset);
-                let end_time = shift(end_time.to_string(), runtime_arguments.offset);
-                writeln!(&mut target_file, "{} --> {}", start_time, end_time).unwrap();
+                start_time.shift(runtime_arguments.offset.into());
+                end_time.shift(runtime_arguments.offset.into());
+
+                writeln!(&mut target_file, "{} --> {}", start_time.format_string(), end_time.format_string()).unwrap();
             },
             LineType::CONTENT => {
                 if line == "\n" {
