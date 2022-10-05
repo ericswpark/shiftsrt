@@ -6,6 +6,13 @@ pub struct RuntimeArguments {
     pub offset: i32,
 }
 
+pub struct TimeCode {
+    pub hour: u16,
+    pub minute: u8,
+    pub second: u8,
+    pub millisecond: u16,
+}
+
 const ARG_COUNT: usize = 3;
 
 impl RuntimeArguments {
@@ -46,6 +53,16 @@ impl RuntimeArguments {
             target_file_path,
             offset
         })
+    }
+}
+
+impl TimeCode {
+    pub fn new(hour: u16, minute: u8, second: u8, millisecond: u16) -> TimeCode {
+        TimeCode { hour, minute, second, millisecond }
+    }
+
+    pub fn format_string(time_code: TimeCode) -> String {
+        format!("{}:{}:{},{}", hour, minute, second, millisecond)
     }
 }
 
