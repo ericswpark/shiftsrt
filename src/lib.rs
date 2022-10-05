@@ -90,7 +90,7 @@ impl TimeCode {
         TimeCode { hour, minute, second, millisecond }
     }
 
-    fn shift(&mut self, offset: i64) {
+    pub fn shift(&mut self, offset: i64) {
         let new_millisecond = self.get_millisecond_in_total() as i64 + offset;
         *self = TimeCode::millisecond_to_timecode(new_millisecond.try_into().unwrap());
     }
