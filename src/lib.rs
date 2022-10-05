@@ -7,7 +7,7 @@ pub struct RuntimeArguments {
 }
 
 pub struct TimeCode {
-    pub hour: u16,
+    pub hour: u8,
     pub minute: u8,
     pub second: u8,
     pub millisecond: u16,
@@ -57,7 +57,7 @@ impl RuntimeArguments {
 }
 
 impl TimeCode {
-    pub fn new(hour: u16, minute: u8, second: u8, millisecond: u16) -> TimeCode {
+    pub fn new(hour: u8, minute: u8, second: u8, millisecond: u16) -> TimeCode {
         TimeCode { hour, minute, second, millisecond }
     }
 
