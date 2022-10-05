@@ -3,13 +3,19 @@ use std::path::Path;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 use regex::Regex;
+use std::process;
+
+
 use shiftsrt::*;
 
 const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}";
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let runtime_arguments = RuntimeArguments::build(&args);
+    let runtime_arguments = RuntimeArguments::build(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
 
     println!("Shifting file {} with offset {}.", source_path, offset);
 
