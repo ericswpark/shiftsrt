@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 use regex::Regex;
 
-const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\n";
+const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}";
 
 fn main() {
     // Gather command-line arguments
