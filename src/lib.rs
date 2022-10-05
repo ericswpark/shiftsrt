@@ -61,6 +61,40 @@ impl TimeCode {
         TimeCode { hour, minute, second, millisecond }
     }
 
+    pub fn parse(timecode_string: &str) -> TimeCode {
+        let parts: Vec<&str> = timecode_string.split(",").collect();
+        let millisecond: u16 = parts[1].trim().parse().unwrap();
+        let parts: Vec<&str> = parts[0].split(":").collect();
+        let hour: u8 = parts[0].trim().parse().unwrap();
+        let minute: u8 = parts[1].trim().parse().unwrap();
+        let second: u8 = parts[2].trim().parse().unwrap();
+
+        TimeCode { hour, minute, second, millisecond }
+    }
+
+    fn get_millisecond_in_total(&self) -> u64 {
+        self.hour as u64 * (60 * 60 * 1000) +
+        self.minute as u64 * (60 * 1000) +
+        self.second as u64 * 1000 +
+        self.millisecond as u64
+    }
+
+    fn millisecond_to_timecode(millisecond: u64) -> TimeCode {
+        let hour: u8 = (millisecond / (60 * 60 * 1000)).try_into().unwrap();
+        let millisecond = millisecond % (60 * 60 * 1000);
+        let minute: u8 = (millisecond / (60 * 1000)).try_into().unwrap();
+        let millisecond = millisecond % (60 * 1000);
+        let second: u8 = (millisecond / 1000).try_into().unwrap();
+        let millisecond: u16 = (millisecond % 1000).try_into().unwrap();
+
+        TimeCode { hour, minute, second, millisecond }
+    }
+
+    fn shift(&mut self, offset: i64) {
+        let new_millisecond = self.get_millisecond_in_total() as i64 + offset;
+        *self = TimeCode::millisecond_to_timecode(new_millisecond.try_into().unwrap());
+    }
+
     pub fn format_string(&self) -> String {
         format!("{:02}:{:02}:{:02},{:03}",
             self.hour,
@@ -69,30 +103,4 @@ impl TimeCode {
             self.millisecond
         )
     }
-}
-
-pub fn shift(time: String, offset: i32) -> String {
-    let parts: Vec<&str> = time.split(",").collect();
-    let millisecond: u16 = parts[1].trim().parse().unwrap();
-
-    let parts: Vec<&str> = parts[0].split(":").collect();
-    let hour: u8 = parts[0].trim().parse().unwrap();
-    let minute: u8 = parts[1].trim().parse().unwrap();
-    let second: u8 = parts[2].trim().parse().unwrap();
-
-    println!("Hour: {}, Minute: {}, Second: {}", hour, minute, second);
-    let second: i64 = (i64::from(second) + i64::from(minute) * 60 + i64::from(hour) * 60 * 60).into();
-    let millisecond: i64 = (i64::from(millisecond) + second * 1000).into();
-
-    let mut millisecond = millisecond + i64::from(offset);
-
-    println!("Millisecond: {}", millisecond);
-    let hour: u8 = (millisecond / (1000 * 60 * 60)).try_into().unwrap();
-    millisecond %= 1000 * 60 * 60;
-    let minute: u8 = (millisecond / (1000 * 60)).try_into().unwrap();
-    millisecond %= 1000 * 60;
-    let second: u8 = (millisecond / 1000).try_into().unwrap();
-    millisecond %= 1000;
-
-    format!("{}:{}:{},{}", hour, minute, second, millisecond)
 }
