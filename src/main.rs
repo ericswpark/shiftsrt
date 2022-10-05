@@ -1,13 +1,9 @@
 use std::env;
 use std::fs::File;
 use std::io::{prelude::*, BufReader};
-use regex::Regex;
 use std::process;
 
-
 use shiftsrt::*;
-
-const TIME_LINE_FORMAT_REGEX: &str = r"\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}";
 
 enum LineType {
     COUNT,
@@ -35,7 +31,6 @@ fn main() {
         .expect("Failed to open target file.");
 
     let mut next_line = LineType::COUNT;
-    let regex_matcher = Regex::new(TIME_LINE_FORMAT_REGEX).unwrap();
 
     for line in source_file_reader.lines() {
         let line = line.unwrap();
