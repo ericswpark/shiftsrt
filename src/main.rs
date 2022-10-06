@@ -51,7 +51,7 @@ fn main() {
                 writeln!(&mut target_file, "{} --> {}", start_time.format_string(), end_time.format_string()).unwrap();
             },
             LineType::CONTENT => {
-                if line == "\n" {
+                if line == "" {
                     next_line = LineType::COUNT;
                 }
                 writeln!(&mut target_file, "{}", line).unwrap();
