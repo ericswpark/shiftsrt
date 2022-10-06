@@ -6,6 +6,8 @@ A little program to shift .srt subtitle files by an offset
 
 This is my first Rust project. While it should not touch your original subtitle file, always make a backup before running this tool.
 
+If you have any suggestions or PRs to improve this project, please feel free to send them!
+
 ## Usage
 
 ```
