@@ -17,7 +17,7 @@ pub struct TimeCode {
 impl RuntimeArguments {
     pub fn build(args: [String; 3]) -> Result<RuntimeArguments, &'static str> {
         // Check if first argument is a valid path and a valid .srt file
-        let source_file_path = &args[1];
+        let source_file_path = args[1].clone();
         if !Path::new(&source_file_path).exists() {
             return Err(
                 "The first argument must be a valid path. The specified path does not exist.",
@@ -45,7 +45,7 @@ impl RuntimeArguments {
         ))?;
 
         Ok(RuntimeArguments {
-            source_file_path: source_file_path.clone(),
+            source_file_path,
             target_file_path,
             offset,
         })
