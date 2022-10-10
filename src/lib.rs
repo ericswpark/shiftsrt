@@ -77,11 +77,20 @@ impl TimeCode {
         if parts.len() < 2 {
             return Err("Not enough parts to timecode string.");
         }
-        let millisecond: u16 = parts[1].trim().parse().or(Err("Millisecond cannot be parsed."))?;
+        let millisecond: u16 = parts[1]
+            .trim()
+            .parse()
+            .or(Err("Millisecond cannot be parsed."))?;
         let parts: Vec<&str> = parts[0].split(':').collect();
         let hour: u8 = parts[0].trim().parse().or(Err("Hour cannot be parsed."))?;
-        let minute: u8 = parts[1].trim().parse().or(Err("Minute cannot be parsed."))?;
-        let second: u8 = parts[2].trim().parse().or(Err("Second cannot be parsed."))?;
+        let minute: u8 = parts[1]
+            .trim()
+            .parse()
+            .or(Err("Minute cannot be parsed."))?;
+        let second: u8 = parts[2]
+            .trim()
+            .parse()
+            .or(Err("Second cannot be parsed."))?;
 
         Ok(TimeCode {
             hour,
