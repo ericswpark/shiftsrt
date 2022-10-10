@@ -1,5 +1,5 @@
-use std::path::Path;
 use std::cmp::Ordering;
+use std::path::Path;
 
 pub struct RuntimeArguments {
     pub source_file_path: String,
