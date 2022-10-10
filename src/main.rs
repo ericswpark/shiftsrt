@@ -31,10 +31,8 @@ fn main() {
         File::create(runtime_arguments.target_file_path).expect("Failed to open target file.");
 
     let mut next_line = LineType::Count;
-    let mut line_count = 0;
 
-    for line in source_file_reader.lines() {
-        line_count += 1;
+    for (count, line) in source_file_reader.lines().enumerate() {
         let line = line.unwrap();
         match next_line {
             LineType::Count => {
@@ -45,15 +43,11 @@ fn main() {
                 next_line = LineType::Content;
                 let times: Vec<&str> = line.split(" --> ").collect();
                 let mut start_time: TimeCode = TimeCode::parse(times[0]).unwrap_or_else(|e| {
-                    println!(
-                        "There was an error parsing the start timecode on line {line_count}: {e}"
-                    );
+                    println!("There was an error parsing the start timecode on line {count}: {e}");
                     process::exit(2);
                 });
                 let mut end_time: TimeCode = TimeCode::parse(times[1]).unwrap_or_else(|e| {
-                    println!(
-                        "There was an error parsing the end timecode on line {line_count}: {e}"
-                    );
+                    println!("There was an error parsing the end timecode on line {count}: {e}");
                     process::exit(2);
                 });
 
