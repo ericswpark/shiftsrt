@@ -44,11 +44,13 @@ fn main() {
             LineType::Timecode => {
                 next_line = LineType::Content;
                 let times: Vec<&str> = line.split(" --> ").collect();
-                let mut start_time: TimeCode = TimeCode::parse(times[0]).unwrap_or_else( |_| {
-                    panic!("There was an error parsing the start timecode on line {}.", line_count);
+                let mut start_time: TimeCode = TimeCode::parse(times[0]).unwrap_or_else( |e| {
+                    println!("There was an error parsing the start timecode on line {line_count}: {e}");
+                    process::exit(2);
                 });
-                let mut end_time: TimeCode = TimeCode::parse(times[1]).unwrap_or_else( |_| {
-                    panic!("There was an error parsing the end timecode on line {}.", line_count);
+                let mut end_time: TimeCode = TimeCode::parse(times[1]).unwrap_or_else( |e| {
+                    println!("There was an error parsing the end timecode on line {line_count}: {e}");
+                    process::exit(2);
                 });
 
                 start_time.shift(runtime_arguments.offset.into());

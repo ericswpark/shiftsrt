@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use std::num::{ParseIntError, TryFromIntError};
+use std::num::TryFromIntError;
 use std::path::Path;
 
 pub struct RuntimeArguments {
@@ -72,13 +72,16 @@ impl TimeCode {
         }
     }
 
-    pub fn parse(timecode_string: &str) -> Result<TimeCode, ParseIntError> {
+    pub fn parse(timecode_string: &str) -> Result<TimeCode, &'static str> {
         let parts: Vec<&str> = timecode_string.split(',').collect();
-        let millisecond: u16 = parts[1].trim().parse()?;
+        if parts.len() < 2 {
+            return Err("Not enough parts to timecode string.");
+        }
+        let millisecond: u16 = parts[1].trim().parse().or(Err("Millisecond cannot be parsed."))?;
         let parts: Vec<&str> = parts[0].split(':').collect();
-        let hour: u8 = parts[0].trim().parse()?;
-        let minute: u8 = parts[1].trim().parse()?;
-        let second: u8 = parts[2].trim().parse()?;
+        let hour: u8 = parts[0].trim().parse().or(Err("Hour cannot be parsed."))?;
+        let minute: u8 = parts[1].trim().parse().or(Err("Minute cannot be parsed."))?;
+        let second: u8 = parts[2].trim().parse().or(Err("Second cannot be parsed."))?;
 
         Ok(TimeCode {
             hour,
