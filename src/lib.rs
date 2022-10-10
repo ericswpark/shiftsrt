@@ -1,4 +1,5 @@
 use std::path::Path;
+use std::cmp::Ordering;
 
 pub struct RuntimeArguments {
     pub source_file_path: String,
@@ -18,10 +19,10 @@ const ARG_COUNT: usize = 3;
 impl RuntimeArguments {
     pub fn build(args: &[String]) -> Result<RuntimeArguments, &'static str> {
         // Check if argument count is correct
-        if args.len() < ARG_COUNT {
-            return Err("Not enough arguments");
-        } else if args.len() > ARG_COUNT {
-            return Err("Too many arguments");
+        match args.len().cmp(&ARG_COUNT) {
+            Ordering::Less => return Err("Not enough arguments"),
+            Ordering::Greater => return Err("Too many arguments"),
+            Ordering::Equal => (),
         }
 
         // Check if first argument is a valid path and a valid .srt file
