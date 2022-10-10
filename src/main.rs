@@ -6,9 +6,9 @@ use std::process;
 use shiftsrt::{RuntimeArguments, TimeCode};
 
 enum LineType {
-    COUNT,
-    TIMECODE,
-    CONTENT,
+    Count,
+    Timecode,
+    Content,
 }
 
 fn main() {
@@ -30,17 +30,17 @@ fn main() {
     let mut target_file =
         File::create(runtime_arguments.target_file_path).expect("Failed to open target file.");
 
-    let mut next_line = LineType::COUNT;
+    let mut next_line = LineType::Count;
 
     for line in source_file_reader.lines() {
         let line = line.unwrap();
         match next_line {
-            LineType::COUNT => {
-                next_line = LineType::TIMECODE;
+            LineType::Count => {
+                next_line = LineType::Timecode;
                 writeln!(&mut target_file, "{}", line).unwrap();
             }
-            LineType::TIMECODE => {
-                next_line = LineType::CONTENT;
+            LineType::Timecode => {
+                next_line = LineType::Content;
                 let times: Vec<&str> = line.split(" --> ").collect();
                 let mut start_time = TimeCode::parse(times[0]);
                 let mut end_time = TimeCode::parse(times[1]);
@@ -56,9 +56,9 @@ fn main() {
                 )
                 .unwrap();
             }
-            LineType::CONTENT => {
+            LineType::Content => {
                 if line.is_empty() {
-                    next_line = LineType::COUNT;
+                    next_line = LineType::Count;
                 }
                 writeln!(&mut target_file, "{}", line).unwrap();
             }
