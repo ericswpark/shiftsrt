@@ -52,7 +52,7 @@ impl RuntimeArguments {
         let offset: i32 = args[2]
             .trim()
             .parse()
-            .expect("Not a valid integer. Input the time offset in milliseconds.");
+            .or(Err("Not a valid integer. Input the time offset in milliseconds."))?;
 
         Ok(RuntimeArguments {
             source_file_path: source_file_path.clone(),
