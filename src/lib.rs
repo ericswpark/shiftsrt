@@ -16,7 +16,7 @@ pub struct TimeCode {
 const ARG_COUNT: usize = 3;
 
 impl RuntimeArguments {
-    pub fn build(args: &[String]) -> Result<RuntimeArguments, &'static str> {
+    pub fn build(args: Vec<String>) -> Result<RuntimeArguments, &'static str> {
         // Check if argument count is correct
         if args.len() < ARG_COUNT {
             return Err("Not enough arguments");
@@ -26,7 +26,7 @@ impl RuntimeArguments {
 
         // Check if first argument is a valid path and a valid .srt file
         let source_file_path = &args[1];
-        if !Path::new(&source_file_path).exists() {
+        if !Path::new(source_file_path).exists() {
             return Err("The first argument must be a valid path. The specified path does not exist.");
         }
         if source_file_path.len() < 4 || !source_file_path.ends_with(".srt") {
@@ -49,7 +49,7 @@ impl RuntimeArguments {
             .expect("Not a valid integer. Input the time offset in milliseconds.");
 
         Ok(RuntimeArguments {
-            source_file_path: source_file_path.clone(),
+            source_file_path: *source_file_path,
             target_file_path,
             offset
         })
