@@ -19,7 +19,8 @@ fn main() {
         Ordering::Greater => Err("Too many arguments"),
         Ordering::Less => Err("Not enough arguments"),
         Ordering::Equal => Ok(()),
-    }.unwrap_or_else(|e| {
+    }
+    .unwrap_or_else(|e| {
         println!("Problem with argument count: {e}");
         process::exit(1);
     });
