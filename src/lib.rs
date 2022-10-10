@@ -16,8 +16,8 @@ pub struct TimeCode {
 
 impl RuntimeArguments {
     pub fn build(args: [String; 3]) -> Result<RuntimeArguments, &'static str> {
-        // Check if first argument is a valid path and a valid .srt file
-        let source_file_path = args[1].clone();
+        let [_, source_file_path, offset] = args;
+
         if !Path::new(&source_file_path).exists() {
             return Err(
                 "The first argument must be a valid path. The specified path does not exist.",
@@ -40,7 +40,7 @@ impl RuntimeArguments {
         }
 
         // Check if second argument is time offset in milliseconds
-        let offset: i32 = args[2].trim().parse().or(Err(
+        let offset: i32 = offset.trim().parse().or(Err(
             "Not a valid integer. Input the time offset in milliseconds.",
         ))?;
 
