@@ -57,7 +57,7 @@ fn main() {
                 .unwrap();
             }
             LineType::CONTENT => {
-                if line == "" {
+                if line.is_empty() {
                     next_line = LineType::COUNT;
                 }
                 writeln!(&mut target_file, "{}", line).unwrap();
