@@ -72,9 +72,9 @@ impl TimeCode {
     }
 
     pub fn parse(timecode_string: &str) -> TimeCode {
-        let parts: Vec<&str> = timecode_string.split(",").collect();
+        let parts: Vec<&str> = timecode_string.split(',').collect();
         let millisecond: u16 = parts[1].trim().parse().unwrap();
-        let parts: Vec<&str> = parts[0].split(":").collect();
+        let parts: Vec<&str> = parts[0].split(':').collect();
         let hour: u8 = parts[0].trim().parse().unwrap();
         let minute: u8 = parts[1].trim().parse().unwrap();
         let second: u8 = parts[2].trim().parse().unwrap();
