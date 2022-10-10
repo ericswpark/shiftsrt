@@ -27,17 +27,22 @@ impl RuntimeArguments {
         // Check if first argument is a valid path and a valid .srt file
         let source_file_path = &args[1];
         if !Path::new(&source_file_path).exists() {
-            return Err("The first argument must be a valid path. The specified path does not exist.");
+            return Err(
+                "The first argument must be a valid path. The specified path does not exist.",
+            );
         }
         if source_file_path.len() < 4 || !source_file_path.ends_with(".srt") {
-            return Err("The file is not a valid .srt file. Hint: make sure the file extension is correct.");
+            return Err(
+                "The file is not a valid .srt file. Hint: make sure the file extension is correct.",
+            );
         }
 
         // Check if target file already exists
         let target_file_path = source_file_path
-            .get(..source_file_path.len()-4)
+            .get(..source_file_path.len() - 4)
             .unwrap()
-            .to_owned() + "-shift.srt";
+            .to_owned()
+            + "-shift.srt";
         if Path::new(&target_file_path).exists() {
             return Err("The target file exists. To prevent accidentally overwriting the file, shiftsrt will now stop.");
         }
@@ -51,14 +56,19 @@ impl RuntimeArguments {
         Ok(RuntimeArguments {
             source_file_path: source_file_path.clone(),
             target_file_path,
-            offset
+            offset,
         })
     }
 }
 
 impl TimeCode {
     pub fn new(hour: u8, minute: u8, second: u8, millisecond: u16) -> TimeCode {
-        TimeCode { hour, minute, second, millisecond }
+        TimeCode {
+            hour,
+            minute,
+            second,
+            millisecond,
+        }
     }
 
     pub fn parse(timecode_string: &str) -> TimeCode {
@@ -69,14 +79,19 @@ impl TimeCode {
         let minute: u8 = parts[1].trim().parse().unwrap();
         let second: u8 = parts[2].trim().parse().unwrap();
 
-        TimeCode { hour, minute, second, millisecond }
+        TimeCode {
+            hour,
+            minute,
+            second,
+            millisecond,
+        }
     }
 
     fn get_millisecond_in_total(&self) -> u64 {
-        self.hour as u64 * (60 * 60 * 1000) +
-        self.minute as u64 * (60 * 1000) +
-        self.second as u64 * 1000 +
-        self.millisecond as u64
+        self.hour as u64 * (60 * 60 * 1000)
+            + self.minute as u64 * (60 * 1000)
+            + self.second as u64 * 1000
+            + self.millisecond as u64
     }
 
     fn millisecond_to_timecode(millisecond: u64) -> TimeCode {
@@ -87,7 +102,12 @@ impl TimeCode {
         let second: u8 = (millisecond / 1000).try_into().unwrap();
         let millisecond: u16 = (millisecond % 1000).try_into().unwrap();
 
-        TimeCode { hour, minute, second, millisecond }
+        TimeCode {
+            hour,
+            minute,
+            second,
+            millisecond,
+        }
     }
 
     pub fn shift(&mut self, offset: i64) {
@@ -96,11 +116,9 @@ impl TimeCode {
     }
 
     pub fn format_string(&self) -> String {
-        format!("{:02}:{:02}:{:02},{:03}",
-            self.hour,
-            self.minute,
-            self.second,
-            self.millisecond
+        format!(
+            "{:02}:{:02}:{:02},{:03}",
+            self.hour, self.minute, self.second, self.millisecond
         )
     }
 }

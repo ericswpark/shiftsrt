@@ -8,7 +8,7 @@ use shiftsrt::{RuntimeArguments, TimeCode};
 enum LineType {
     COUNT,
     TIMECODE,
-    CONTENT
+    CONTENT,
 }
 
 fn main() {
@@ -18,17 +18,17 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Shifting file {} with offset {}.",
-             runtime_arguments.source_file_path,
-             runtime_arguments.offset
+    println!(
+        "Shifting file {} with offset {}.",
+        runtime_arguments.source_file_path, runtime_arguments.offset
     );
 
     // Get source file to read
-    let source_file = File::open(runtime_arguments.source_file_path)
-        .expect("Failed to open source file.");
+    let source_file =
+        File::open(runtime_arguments.source_file_path).expect("Failed to open source file.");
     let source_file_reader = BufReader::new(source_file);
-    let mut target_file = File::create(runtime_arguments.target_file_path)
-        .expect("Failed to open target file.");
+    let mut target_file =
+        File::create(runtime_arguments.target_file_path).expect("Failed to open target file.");
 
     let mut next_line = LineType::COUNT;
 
@@ -38,7 +38,7 @@ fn main() {
             LineType::COUNT => {
                 next_line = LineType::TIMECODE;
                 writeln!(&mut target_file, "{}", line).unwrap();
-            },
+            }
             LineType::TIMECODE => {
                 next_line = LineType::CONTENT;
                 let times: Vec<&str> = line.split(" --> ").collect();
@@ -48,8 +48,14 @@ fn main() {
                 start_time.shift(runtime_arguments.offset.into());
                 end_time.shift(runtime_arguments.offset.into());
 
-                writeln!(&mut target_file, "{} --> {}", start_time.format_string(), end_time.format_string()).unwrap();
-            },
+                writeln!(
+                    &mut target_file,
+                    "{} --> {}",
+                    start_time.format_string(),
+                    end_time.format_string()
+                )
+                .unwrap();
+            }
             LineType::CONTENT => {
                 if line == "" {
                     next_line = LineType::COUNT;
