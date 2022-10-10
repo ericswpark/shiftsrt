@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::num::TryFromIntError;
 use std::path::Path;
 
@@ -15,17 +14,8 @@ pub struct TimeCode {
     pub millisecond: u16,
 }
 
-const ARG_COUNT: usize = 3;
-
 impl RuntimeArguments {
-    pub fn build(args: &[String]) -> Result<RuntimeArguments, &'static str> {
-        // Check if argument count is correct
-        match args.len().cmp(&ARG_COUNT) {
-            Ordering::Less => return Err("Not enough arguments"),
-            Ordering::Greater => return Err("Too many arguments"),
-            Ordering::Equal => (),
-        }
-
+    pub fn build(args: [String; 3]) -> Result<RuntimeArguments, &'static str> {
         // Check if first argument is a valid path and a valid .srt file
         let source_file_path = &args[1];
         if !Path::new(&source_file_path).exists() {

@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::env;
 use std::fs::File;
 use std::io::{prelude::*, BufReader};
@@ -13,10 +14,21 @@ enum LineType {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let runtime_arguments = RuntimeArguments::build(&args).unwrap_or_else(|err| {
-        println!("Problem parsing arguments: {err}");
+
+    match args.len().cmp(&3) {
+        Ordering::Greater => Err("Too many arguments"),
+        Ordering::Less => Err("Not enough arguments"),
+        Ordering::Equal => Ok(()),
+    }.unwrap_or_else(|e| {
+        println!("Problem with argument count: {e}");
         process::exit(1);
     });
+
+    let runtime_arguments =
+        RuntimeArguments::build(args.try_into().unwrap()).unwrap_or_else(|err| {
+            println!("Problem parsing arguments: {err}");
+            process::exit(1);
+        });
 
     println!(
         "Shifting file {} with offset {}.",
