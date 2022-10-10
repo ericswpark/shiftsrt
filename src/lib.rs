@@ -1,4 +1,5 @@
 use std::cmp::Ordering;
+use std::num::TryFromIntError;
 use std::path::Path;
 
 pub struct RuntimeArguments {
@@ -95,25 +96,25 @@ impl TimeCode {
             + self.millisecond as u64
     }
 
-    fn millisecond_to_timecode(millisecond: u64) -> TimeCode {
-        let hour: u8 = (millisecond / (60 * 60 * 1000)).try_into().unwrap();
+    fn millisecond_to_timecode(millisecond: u64) -> Result<TimeCode, TryFromIntError> {
+        let hour: u8 = (millisecond / (60 * 60 * 1000)).try_into()?;
         let millisecond = millisecond % (60 * 60 * 1000);
-        let minute: u8 = (millisecond / (60 * 1000)).try_into().unwrap();
+        let minute: u8 = (millisecond / (60 * 1000)).try_into()?;
         let millisecond = millisecond % (60 * 1000);
-        let second: u8 = (millisecond / 1000).try_into().unwrap();
-        let millisecond: u16 = (millisecond % 1000).try_into().unwrap();
+        let second: u8 = (millisecond / 1000).try_into()?;
+        let millisecond: u16 = (millisecond % 1000).try_into()?;
 
-        TimeCode {
+        Ok(TimeCode {
             hour,
             minute,
             second,
             millisecond,
-        }
+        })
     }
 
     pub fn shift(&mut self, offset: i64) {
-        let new_millisecond = self.get_millisecond_in_total() as i64 + offset;
-        *self = TimeCode::millisecond_to_timecode(new_millisecond.try_into().unwrap());
+        let new_millisecond: i64 = self.get_millisecond_in_total() as i64 + offset;
+        *self = TimeCode::millisecond_to_timecode(new_millisecond.try_into().unwrap()).unwrap();
     }
 
     pub fn format_string(&self) -> String {
