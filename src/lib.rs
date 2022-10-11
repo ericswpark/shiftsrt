@@ -128,7 +128,10 @@ impl TimeCode {
     }
 
     pub fn shift(&mut self, offset: i64) {
-        let new_millisecond: i64 = self.get_millisecond_in_total() as i64 + offset;
+        let new_millisecond = match (self.get_millisecond_in_total() as i64).checked_add(offset) {
+            Some(x) => x,
+            None => panic!("Cannot shift timecode by offset {offset}, value overflows."),
+        };
         *self = TimeCode::millisecond_to_timecode(new_millisecond.try_into().unwrap()).unwrap();
     }
 
