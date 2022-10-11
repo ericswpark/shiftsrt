@@ -46,7 +46,7 @@ fn main() {
     let mut next_line = LineType::Count;
 
     for (count, line) in source_file_reader.lines().enumerate() {
-        let line = line.unwrap();
+        let line = line.unwrap().trim();
         match next_line {
             LineType::Count => {
                 next_line = LineType::Timecode;
@@ -54,12 +54,12 @@ fn main() {
             }
             LineType::Timecode => {
                 next_line = LineType::Content;
-                let times: Vec<&str> = line.split(" --> ").collect();
-                let mut start_time: TimeCode = TimeCode::parse(times[0]).unwrap_or_else(|e| {
+                let times: Vec<&str> = line.split("-->").collect();
+                let mut start_time: TimeCode = TimeCode::parse(times[0].trim()).unwrap_or_else(|e| {
                     println!("There was an error parsing the start timecode on line {count}: {e}");
                     process::exit(2);
                 });
-                let mut end_time: TimeCode = TimeCode::parse(times[1]).unwrap_or_else(|e| {
+                let mut end_time: TimeCode = TimeCode::parse(times[1].trim()).unwrap_or_else(|e| {
                     println!("There was an error parsing the end timecode on line {count}: {e}");
                     process::exit(2);
                 });
