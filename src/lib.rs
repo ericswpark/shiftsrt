@@ -53,13 +53,27 @@ impl RuntimeArguments {
 }
 
 impl TimeCode {
-    pub fn new(hour: u8, minute: u8, second: u8, millisecond: u16) -> TimeCode {
-        TimeCode {
+    pub fn new(hour: u8, minute: u8, second: u8, millisecond: u16) -> Result<TimeCode, &'static str> {
+        // Bounds check
+        if hour > 99 {
+            return Err("Hour cannot be more than 99 hours.");
+        }
+        if minute > 59 {
+            return Err("Minute cannot be more than 59 minutes.");
+        }
+        if second > 59 {
+            return Err("Second cannot be more than 59 seconds.");
+        }
+        if millisecond > 999 {
+            return Err("Millisecond cannot be more than 999 milliseconds.");
+        }
+
+        Ok(TimeCode {
             hour,
             minute,
             second,
             millisecond,
-        }
+        })
     }
 
     pub fn parse(timecode_string: &str) -> Result<TimeCode, &'static str> {
@@ -82,26 +96,7 @@ impl TimeCode {
             .parse()
             .or(Err("Second cannot be parsed."))?;
 
-        // Bounds check
-        if hour > 99 {
-            return Err("Hour cannot be more than 99 hours.");
-        }
-        if minute > 59 {
-            return Err("Minute cannot be more than 59 minutes.");
-        }
-        if second > 59 {
-            return Err("Second cannot be more than 59 seconds.");
-        }
-        if millisecond > 999 {
-            return Err("Millisecond cannot be more than 999 milliseconds.");
-        }
-
-        Ok(TimeCode {
-            hour,
-            minute,
-            second,
-            millisecond,
-        })
+        TimeCode::new(hour, minute, second, millisecond)
     }
 
     fn get_millisecond_in_total(&self) -> u64 {
