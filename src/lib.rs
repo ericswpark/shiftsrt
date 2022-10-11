@@ -82,6 +82,20 @@ impl TimeCode {
             .parse()
             .or(Err("Second cannot be parsed."))?;
 
+        // Bounds check
+        if hour > 99 {
+            return Err("Hour cannot be more than 99 hours.");
+        }
+        if minute > 59 {
+            return Err("Minute cannot be more than 59 minutes.");
+        }
+        if second > 59 {
+            return Err("Second cannot be more than 59 seconds.");
+        }
+        if millisecond > 999 {
+            return Err("Millisecond cannot be more than 999 milliseconds.");
+        }
+
         Ok(TimeCode {
             hour,
             minute,
