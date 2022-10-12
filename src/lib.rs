@@ -53,7 +53,12 @@ impl RuntimeArguments {
 }
 
 impl TimeCode {
-    pub fn new(hour: u8, minute: u8, second: u8, millisecond: u16) -> Result<TimeCode, &'static str> {
+    pub fn new(
+        hour: u8,
+        minute: u8,
+        second: u8,
+        millisecond: u16,
+    ) -> Result<TimeCode, &'static str> {
         // Bounds check
         if hour > 99 {
             return Err("Hour cannot be more than 99 hours.");
