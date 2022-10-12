@@ -46,7 +46,8 @@ fn main() {
     let mut next_line = LineType::Count;
 
     for (count, line) in source_file_reader.lines().enumerate() {
-        let line = line.unwrap().trim();
+        let line = line.unwrap();
+        let line = line.trim();
         match next_line {
             LineType::Count => {
                 next_line = LineType::Timecode;
