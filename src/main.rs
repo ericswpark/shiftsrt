@@ -33,7 +33,7 @@ fn main() {
 
     println!(
         "Shifting file {} with offset {}.",
-        runtime_arguments.source_file_path, runtime_arguments.offset
+        runtime_arguments.source_file_path.display(), runtime_arguments.offset
     );
 
     // Get source file to read

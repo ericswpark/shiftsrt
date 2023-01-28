@@ -1,9 +1,9 @@
 use std::num::TryFromIntError;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 pub struct RuntimeArguments {
-    pub source_file_path: String,
-    pub target_file_path: String,
+    pub source_file_path: PathBuf,
+    pub target_file_path: PathBuf,
     pub offset: i32,
 }
 
@@ -45,8 +45,8 @@ impl RuntimeArguments {
         ))?;
 
         Ok(RuntimeArguments {
-            source_file_path,
-            target_file_path,
+            source_file_path: PathBuf::from(source_file_path),
+            target_file_path: PathBuf::from(target_file_path),
             offset,
         })
     }
