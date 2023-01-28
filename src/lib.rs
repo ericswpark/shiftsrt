@@ -1,5 +1,5 @@
 use std::num::TryFromIntError;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 pub struct RuntimeArguments {
     pub source_file_path: PathBuf,
@@ -18,24 +18,25 @@ impl RuntimeArguments {
     pub fn build(args: [String; 3]) -> Result<RuntimeArguments, &'static str> {
         let [_, source_file_path, offset] = args;
 
-        if !Path::new(&source_file_path).exists() {
+        let source_file_path = PathBuf::from(source_file_path);
+
+        if !source_file_path.exists() {
             return Err(
                 "The first argument must be a valid path. The specified path does not exist.",
             );
         }
-        if source_file_path.len() < 4 || !source_file_path.ends_with(".srt") {
+        if source_file_path.extension().unwrap() != "srt" {
             return Err(
                 "The file is not a valid .srt file. Hint: make sure the file extension is correct.",
             );
         }
 
         // Check if target file already exists
-        let target_file_path = source_file_path
-            .get(..source_file_path.len() - 4)
-            .unwrap()
-            .to_owned()
-            + "-shift.srt";
-        if Path::new(&target_file_path).exists() {
+        let mut target_file_path = source_file_path.to_owned();
+        let target_file_name = source_file_path.file_stem().unwrap().to_str().unwrap().to_owned() + "-shift";
+        target_file_path.set_file_name(target_file_name);
+
+        if target_file_path.exists() {
             return Err("The target file exists. To prevent accidentally overwriting the file, shiftsrt will now stop.");
         }
 
@@ -45,8 +46,8 @@ impl RuntimeArguments {
         ))?;
 
         Ok(RuntimeArguments {
-            source_file_path: PathBuf::from(source_file_path),
-            target_file_path: PathBuf::from(target_file_path),
+            source_file_path,
+            target_file_path,
             offset,
         })
     }
