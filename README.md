@@ -30,8 +30,3 @@ Shift the file `Up.srt` back by 7 seconds (7000 milliseconds):
 ./shiftsrt ./Up.srt -7000
 ```
 
-## Contributing
-
-All commits must follow the [Conventional Commits][conventional-commits] specification.
-
-[conventional-commits]: https://www.conventionalcommits.org/en/v1.0.0/
